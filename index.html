@@ -63,7 +63,7 @@
     box-shadow: 0 8px 20px rgba(255,79,139,.4); transition: transform .25s ease;
   }
   .primary:hover { transform: scale(1.06); }
-  #noBtn, #noBtn2 { background: #fff; color: var(--rose); border: 2px solid var(--soft); position: relative; }
+  #noBtn { background: #fff; color: var(--rose); border: 2px solid var(--soft); position: relative; }
 
   .meter-track { height: 10px; background: #ffe0ec; border-radius: 20px; overflow: hidden; border: 1px solid var(--soft); max-width: 300px; margin: 0 auto; }
   .meter-fill { height: 100%; width: 10%; background: linear-gradient(90deg, #ff9ac1, var(--pink)); transition: width .5s ease; }
@@ -77,11 +77,12 @@
   }
   .polaroid:nth-child(1) { transform: rotate(-5deg); }
   .polaroid:nth-child(2) { transform: rotate(4deg) translateY(-8px); }
-  .polaroid:hover { transform: rotate(0) scale(1.08); z-index: 3; }
+    .polaroid:hover { transform: rotate(0) scale(1.08); z-index: 3; }
   .photo-box {
-    position: relative; width: 100%; height: 200px; background: linear-gradient(135deg, #ffd9e6, #fff0d9);
+    width: 100%; height: 200px; background: linear-gradient(135deg, #ffd9e6, #fff0d9);
     display: flex; align-items: center; justify-content: center; font-size: 40px; overflow: hidden;
   }
+  .photo-box { position: relative; }
   .photo-box img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 35%; display: block; }
   .caption { font-family: 'Dancing Script', cursive; font-size: 17px; color: var(--rose); margin-top: 6px; }
 
@@ -100,6 +101,7 @@
   @keyframes veil { 50% { transform: skewX(-6deg); } }
   .top-heart { transform-box: fill-box; transform-origin: center; animation: beat 1s ease-in-out infinite; }
   @keyframes beat { 50% { transform: scale(1.25); } }
+
 
   .round-photos { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 6px 0 14px; }
   .round-photos .rp { width: 78px; height: 78px; border-radius: 50%; border: 3px solid var(--gold); overflow: hidden; box-shadow: 0 6px 16px rgba(212,166,74,.35); background: #ffd9e6; }
@@ -219,6 +221,7 @@
           <circle cx="142" cy="94" r="2.6" fill="#3a2a2a"/><circle cx="158" cy="94" r="2.6" fill="#3a2a2a"/>
           <path d="M142 103 Q150 110 158 103" stroke="#c23a63" stroke-width="2.5" fill="none" stroke-linecap="round"/>
           <circle cx="136" cy="102" r="4" fill="#ffb6c9" opacity=".8"/><circle cx="164" cy="102" r="4" fill="#ffb6c9" opacity=".8"/>
+          <circle cx="150" cy="175" r="0"/>
         </g>
 
         <!-- Holding hands + bouquet -->
@@ -376,4 +379,39 @@
     const arrow = document.querySelector('.name-card .arrow');
     const nw = document.getElementById('newName');
     const full = 'Raksha Manav Patel';
-    setTimeout(() => oldEl.classList.add('struck'), 1200)
+    setTimeout(() => oldEl.classList.add('struck'), 1200);
+    setTimeout(() => arrow.classList.add('show'), 2000);
+    setTimeout(() => {
+      let i = 0;
+      const t = setInterval(() => {
+        nw.textContent = full.slice(0, ++i);
+        if (i >= full.length) clearInterval(t);
+      }, 110);
+    }, 2800);
+  }
+  function sayYes() {
+    revealName();
+    showPromises();
+    switchView('celebrateView');
+    confetti(); setTimeout(confetti, 700); setTimeout(confetti, 1500);
+  }
+
+  // Cursor / touch heart trail
+  const trail = ['💕', '💗', '🌸', '💍'];
+  let last = 0;
+  function drop(x, y) {
+    const n = Date.now();
+    if (n - last < 90) return;
+    last = n;
+    const t = document.createElement('div');
+    t.className = 'trail-heart';
+    t.textContent = trail[Math.floor(Math.random() * trail.length)];
+    t.style.left = (x - 8) + 'px'; t.style.top = (y - 8) + 'px';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 900);
+  }
+  document.addEventListener('mousemove', e => drop(e.clientX, e.clientY));
+  document.addEventListener('touchmove', e => { if (e.touches[0]) drop(e.touches[0].clientX, e.touches[0].clientY); });
+</script>
+</body>
+</html>
